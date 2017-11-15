@@ -49,14 +49,29 @@
 #save-pun-modal #img-frame {
     height: 100%; }
 #save-pun-modal #img-frame #img-cont {
-    padding-top: 15px;
+    display: inline-block;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding-bottom: 30px;
+    height: 80%;
 }
 #save-pun-modal #img-frame img {
     border-collapse: collapse;
-    width: 270px;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 270px;
+    max-height: 100%;
     border-radius: 10px; }
 #save-pun-modal #img-frame p {
-    padding-top: 5px;
+    position: absolute;
+    bottom: 5px;
+    margin: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 270px; }
 #save-pun-modal #boards-sel-col {
     border-left-color: #d5d5d5;

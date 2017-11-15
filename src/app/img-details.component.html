@@ -24,7 +24,8 @@
         </div>
         <hr>
         <div id="profile-info">
-            <img class="align-verticallly" [src]="img.profilePicUrl" alt="">
+            <img [src]="img.profilePicUrl" alt="" *ngIf="img.profilePicUrl">
+            <i class="fa fa-user-circle" *ngIf="!img.profilePicUrl"></i>
             <!-- l'ultimo link non funziona ricordarsi di metterlo a posto possibilmente creando una route che rispecchi lo schema proposto nel "routerLink" -->
             <p><a routerLink="/profile/{{img.createdBy}}"><b>{{img.displayName || img.createdBy}}</b></a> saved to <a routerLink="/profile/{{img.createdBy}}/{{img.board}}"><b>{{img.board}}</b></a></p>
             <p *ngIf="img.description">{{img.description}}</p>

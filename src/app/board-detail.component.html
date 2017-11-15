@@ -171,7 +171,8 @@
                                 <p><b>{{img.description}}</b></p>
                                 <div class="account-info relative">
                                     <a routerLink="/profile/{{img.createdBy}}">
-                                        <img [src]="img.profilePicUrl" alt="">
+                                        <img [src]="img.profilePicUrl" alt="" *ngIf="img.profilePicUrl">
+                                        <i class="fa fa-user-circle" *ngIf="!img.profilePicUrl"></i>
                                         <p><b>{{img.createdBy}}</b></p>
                                         <p>{{img.board}}</p>
                                     </a>

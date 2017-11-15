@@ -371,6 +371,7 @@ section #board-img-row {
 .pun-frame .pun-wrapper .img-info-box h4 {
     margin-top: 10px; }
 .pun-frame .pun-wrapper .img-info-box .account-info {
+    height: 50px;
     padding: 10px 0;
     margin-top: -10px; }
 .pun-frame .pun-wrapper .img-info-box .account-info a:hover {
@@ -379,8 +380,16 @@ section #board-img-row {
     text-decoration: underline; }
 .pun-frame .pun-wrapper .img-info-box .account-info a img {
     max-width: 30px;
-    border-radius: 50%;
-    clear: right; }
+    border-radius: 50%; }
+.pun-frame .pun-wrapper .img-info-box .account-info a .fa-user-circle {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    max-width: 30px;
+    color: #3a3a3a;
+}
 .pun-frame .pun-wrapper .img-info-box .account-info a p {
     display: inline-block;
     position: absolute;
