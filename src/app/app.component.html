@@ -1,0 +1,36 @@
+<section *ngIf="loggedIn()">
+    <nav class="navbar fixed-top navbar-toggleable-md navbar-inverse bg-inverse">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        </button>
+        <a class="navbar-brand" href="#">
+            <img src="pun-it-logo.png" class="d-inline-block align-top">
+        </a>
+        <div id="input-wrapper" class="row">
+            <div class="input-group col-sm-12">
+                <i class="fa fa-search fa-1x vertical-align" aria-hidden="true" (click)="submitSearch()"></i>
+                <input type="text" class="form-control vertical-align" placeholder="Search" [formControl]="search">
+            </div>
+        </div>
+        <ul class="navbar-nav nav">
+            <li class="nav-item" id="home-item">
+                <a id="home" class="nav-link" routerLink="/home"><span>Home</span></a>
+            </li>
+            <li class="nav-item" id="profile-item">
+                <a class="nav-link link1" (click)="navigate('profile')"><i class="fa fa-user-circle-o" aria-hidden="true"></i><span>{{displayName}}</span></a>
+            </li>
+            <li class="nav-item link1" id="categories-item">
+                <a class="nav-link" (click)="showTooltip(true)"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+                <div class="tooltip-wrapper" *ngIf="show">
+                    <div class="arrow"></div>
+                    <div class="align" id="b" (mouseleave)="showTooltip(false)">
+                        <ul>
+                            <li class="toolOptions" routerLink="/settings">Settings</li>
+                            <li class="toolOptions" (click)="logout()">Logout</li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </nav>
+</section>
+<router-outlet></router-outlet>

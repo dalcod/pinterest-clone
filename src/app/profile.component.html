@@ -1,0 +1,227 @@
+<div class="row justify-content-center http-error" *ngIf="httpErr">
+    <div class="col-sm-4">
+        <h1 class="align" style="color: red;">{{httpErr}}</h1>
+    </div>
+</div>
+<section *ngIf="!httpErr && loggedIn()" (click)="hide('public-secret-forms', $event)">
+
+    <save-img-comp [img]="myImg" [boards]="myBoards" (newBoard)="onNewBoard($event)" *ngIf="showSaveImgComp"></save-img-comp>
+
+    <!-- form -->
+
+    <div class="form-wrapper" (click)="hide('all-shown')" *ngIf="show3"></div>
+    <div class="row justify-content-center" id="form-row" *ngIf="show3">
+        <form [formGroup]="boardForm" class="col-sm-3 absolute-align" (submit)="updateBoard(boardForm.value)">
+            <div id="form-title">
+                <h2>Edit your board <i class="fa fa-times" (click)="hide('update-form')"></i></h2>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="board-img-in">Change cover:</label>
+                <input class="form-control" id="board-img-in" placeholder="Insert image url" formControlName="boardCoverUrl">
+                <small class="form-error" *ngIf="formErrors.boardCoverUrl">{{formErrors.boardCoverUrl}}</small>
+            </div>
+            <div class="form-group">
+                <label for="in-title">Change title:</label>
+                <input type="text" class="form-control" placeholder="{{selectedBoard.title}}" id="in-title" formControlName="title">
+                <small class="form-error" *ngIf="formErrors.title">{{formErrors.title}}</small>
+            </div>
+            <div class="form-group">
+                <label>Description:</label>
+                <textarea id="comments" rows="6" class="form-control" formControlName="description" (keydown)="setStringLengthLimit($event, 300)">
+                </textarea>
+                <p style="margin-left: 5px;">Max length: <span style="color: red;">{{boardForm.value.description | maxLength:300}}</span></p>
+            </div>
+            <div class="form-check">
+                <label for="check" class="form-check-label">
+                    <!-- per impostare in modo dinamico la proprietà "checked" in base al tipo di board che abbiamo cliccato ovvero se segreta o meno è necessario utilizzare per forza di cose "[ngModel]" gli altri metodi utilizzati non sembrano funzionare nel mantenere il valore del campo input al momento della sottomissione. -->
+                    <input type="checkbox" [ngModel]="selectedBoard.secret" id="check" class="form-check-input" formControlName="secret">
+                    Make the board secret
+                </label>
+            </div>
+            <div class="row justify-content-between">
+                <button class="btn btn-danger" id="save-board-btn">Save</button>
+                <button class="btn" id="delete-board-btn" (click)="show('confirm-window', $event)">Delete</button>
+            </div>
+            <div class="row">
+                <small class="form-error" id="submit-error" *ngIf="submitError">{{submitError}}</small>
+            </div>
+        </form>
+        <!-- finestra popup di conferma cancellazione board -->
+        <div class="form-wrapper" id="confirm-wrapper" (click)="hide('confirm-window', $event)" *ngIf="show4"></div>
+        <div class="col-sm-2 align absolute-align" id="confirm" *ngIf="show4">
+            <p><b>Are you sure?</b></p>
+            <div class="row justify-content-around" id="confirm-btn-cont">
+                <button class="btn" (click)="hide('confirm-window',$event)">Cancel</button>
+                <button class="btn btn-danger" (click)="deleteBoard()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- sezione info profilo -->
+
+    <div class="row justify-content-center" id="account-info">
+        <div class="col-sm-5">
+            <div class="row">
+                <div class="col-sm-8" id="profile-info">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h1>{{displayName}}</h1>
+                        </div>
+                    </div>
+                    <div class="row" id="prof-descr">
+                        <div class="col-sm-12">
+                            <p>{{profileDescription}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 align" id="profile-img">
+                    <i class="fa fa-user-circle" *ngIf="!avatar && !imgError"></i>
+                    <i class="fa fa-times-circle-o" aria-hidden="true" *ngIf="imgError"></i>
+                    <img id="avatar" [src]="avatar" (error)="ifBrokenImg()" *ngIf="avatar && !imgError">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- sezione area navigazione board/my-imgs  -->
+
+    <div class="row justify-content-center" id="borads-puns-nav">
+        <div class="col-sm-1 align">
+            <h4 (click)="show('boards')">Boards</h4>
+        </div>
+        <div class="col-sm-1 align">
+            <h4 (click)="show('my-imgs')">Puns</h4>
+        </div>
+    </div>
+
+    <!-- sezione visualizzazione e creazione board pubbliche e segrete -->
+
+    <div id="boards-section" *ngIf="showBoards">
+        <div class="row justify-content-center board-row">
+            <div class="col-sm-11">
+                <div class="row">
+                    <div class="col-sm-2 justify-content-center add-board" *ngIf="isMyProfile">
+                        <div class="board-inner-wrapper board-hover">
+                            <div class="parent-pos board-window">
+                                <div class="add-board-window" (click)="show('public-form')"></div>
+                                <i class="fa fa-circle absolute-align" aria-hidden="true"></i>
+                                <i class="fa fa-plus-circle absolute-align" aria-hidden="true"></i>
+                            </div>
+                            <h4 *ngIf="!show1">Create Board</h4>
+                            <form class="add-board-form" [formGroup]="addBoardForm" (submit)="createBoard('public', addBoardForm.value)" *ngIf="show1">
+                                <div class="form-group">
+                                    <input type="text" id="add-title" class="form-control" placeholder="Add title" formControlName="addTitle">
+                                    <small class="form-error" *ngIf="formErrors.addTitle">{{formErrors.addTitle}}</small>
+                                </div>
+                                <button class="btn btn-danger">Create</button>
+                                <div class="row">
+                                    <small style="margin: -5px 0 5px 15px;" class="form-error" *ngIf="publicBoardError">{{publicBoardError}}</small>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2 board" *ngFor="let board of boards">
+                        <div class="board-inner-wrapper board-hover parent-pos">
+                            <div class="board-window" (click)="sendCurrentBoard(board)">
+                                <!-- se è stata specificata una cover per la borad utilizzare quella -->
+                                <img class="absolute-align" [src]="board.coverUrl"  *ngIf="board.coverUrl">
+                                <!-- altrimenti utilizzare come cover la prima immagine nell'array "imgs" -->
+                                <img class="absolute-align" [src]="board.imgs[0].url" *ngIf="!board.coverUrl && board.imgs[0] && !board.imgs[0].broken">
+                            </div>
+                            <div class="board-info" id="info1">
+                                <h5>{{board.title}}</h5>
+                                <p *ngIf="board.imgs">{{board.imgs.length}} Puns</p>
+                                <p *ngIf="!board.imgs">0 Puns</p>
+                            </div>
+                            <i class="fa fa-pencil" aria-hidden="true" (click)="show('update-form', '', board)" *ngIf="isMyProfile"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row board-row justify-content-center" id="secret-board" *ngIf="isMyProfile">
+            <div class="col-sm-12">
+                <div class="row justify-content-center">
+                    <div class="col-sm-3 parent-pos" id="secret-board-title">
+                        <h4><i class="fa fa-2x fa-lock vertical-align" aria-hidden="true"></i> <b>Secret Boards</b></h4>
+                        <h5>Only you can see this boards.</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-11">
+                <div class="row">
+                    <div class="col-sm-2 justify-content-center add-board">
+                        <div class="board-inner-wrapper board-hover">
+                            <div class="parent-pos board-window">
+                                <div class="add-board-window" (click)="show('secret-form')"></div>
+                                <i class="fa fa-circle absolute-align" aria-hidden="true"></i>
+                                <i class="fa fa-plus-circle absolute-align" aria-hidden="true"></i>
+                            </div>
+                            <h4 *ngIf="!show2">Create Secret Board</h4>
+                            <form class="add-board-form" [formGroup]="addSecretBoardForm" (submit)="createBoard('secret', addSecretBoardForm.value)" *ngIf="show2">
+                                <div class="form-group">
+                                    <input type="text" id="add-title" class="form-control" placeholder="Add title" formControlName="addSecretTitle">
+                                    <small class="form-error" *ngIf="formErrors.addSecretTitle">{{formErrors.addSecretTitle}}</small>
+                                </div>
+                                <button class="btn btn-danger">Create</button>
+                                <div class="row">
+                                    <small style="margin: -5px 0 5px 15px;" class="form-error" *ngIf="secretBoardError">{{secretBoardError}}</small>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2 board" *ngFor="let secretBoard of secretBoards">
+                        <div class="board-inner-wrapper board-hover parent-pos">
+                            <div class="board-window" (click)="sendCurrentBoard(secretBoard)">
+                                <img class="absolute-align" [src]="secretBoard.coverUrl" *ngIf="secretBoard.coverUrl">
+                                <img class="absolute-align" [src]="secretBoard.imgs[0].url" *ngIf="!secretBoard.CoverUrl && secretBoard.imgs[0]">
+                            </div>
+                            <div class="board-info">
+                                <h5>{{secretBoard.title}}</h5>
+                                <p *ngIf="secretBoard.imgs">{{secretBoard.imgs.length}} Puns</p>
+                                <p *ngIf="!secretBoard.imgs">0 Puns</p>
+                            </div>
+                            <i class="fa fa-pencil" aria-hidden="true" (click)="show('update-form', '', secretBoard)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- sezione visualizzazione di tutte le mie immagini -->
+
+    <div id="my-imgs-section" *ngIf="showMyImgs">
+        <masonry class="align-horizontally" id="my-imgs-row" [options]="myOptions" [useImagesLoaded]="true">
+            <masonry-brick class="pun-frame" *ngFor="let myImg of myImgs">
+                <div class="pun-wrapper pun-hover relative" *ngIf="!myImg.broken">
+                    <div class="img-wrapper" (click)="navigateToDetails($event, myImg)">
+                        <button class="btn btn-danger save-btn" (click)="showSaveImgComponent(myImg)"><i class="fa fa-star-o" aria-hidden="true"></i> Save</button>
+                        <div class="border img-layer"></div>
+                        <img [src]="myImg.url" alt="image">
+                        <div class="link align-horizontally">
+                            <small><a href="{{processUrl(myImg.url)}}" target="_blank">{{processUrl(myImg.url)}}</a></small>
+                        </div>
+                    </div>
+                    <div class="img-info-box">
+                        <h4>{{myImg.title}}</h4>
+                        <p><b>{{myImg.description}}</b></p>
+                    </div>
+                </div>
+                <div class="pun-wrapper pun-hover relative" *ngIf="myImg.broken && isMyProfile">
+                    <div class="img-wrapper">
+                        <div class="border img-layer"></div>
+                        <img src="broken-img.png" alt="image">
+                    </div>
+                    <div class="img-info-box">
+                        <p class="broken-info"><a routerLink="/profile/{{myImg.createdBy}}/{{myImg.board}}">Board: {{myImg.board}}</a></p>
+                    </div>
+                </div>    
+            </masonry-brick>
+        </masonry>
+    </div>
+</section>

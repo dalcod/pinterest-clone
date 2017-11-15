@@ -1,0 +1,84 @@
+<div class="row justify-content-center http-error" *ngIf="httpErr">
+    <div class="col-sm-4">
+        <h1 class="align-text" style="color: red;">{{httpErr}}</h1>
+    </div>
+</div>
+
+<div class="row justify-content-center relative" id="component" *ngIf="!httpErr && loggedIn()">
+    <div class="col-sm-4">
+        <form [formGroup]="profileSettingsForm" (submit)="onSubmit(profileSettingsForm.value)">
+            <h2>Account Basics</h2>
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" id="email" autocomplete="off" class="form-control" placeholder="{{myData.email}}" formControlName="email">
+                <small class="form-error" *ngIf="formErrors.email">{{formErrors.email}}</small>
+            </div>
+            <!-- disables autocomplete for firefox --><input type="text" style="display:none">
+            <div class="form-group" id="username-cont">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="{{myData.username}}" class="form-control" autocomplete="off" formControlName="username">
+                <small class="form-error" *ngIf="formErrors.username">{{formErrors.username}}</small>
+            </div>
+            <!-- disables autocomplete for firefox --><input type="text" style="display:none">
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" autocomplete="off" class="form-control" id="password" placeholder="Change your password..." formControlName="password">
+                <small class="form-error" *ngIf="formErrors.password">{{formErrors.password}}</small>
+            </div>
+            <div class="form-group">
+                <p>Account</p>
+                <button class="btn btn-secondary" (click)="showConfirmBox(true, $event)">Delete account</button>
+            </div>
+            <h2>Profile</h2>
+            <div class="form-inline">
+                <div class="group">
+                    <label for="name">First name</label>
+                    <input type="text" id="name" class="form-control" autocomplete="off" placeholder="{{myData.firstName}}" formControlName="firstName">
+                </div>
+                <!-- disables autocomplete for firefox --><input type="text" style="display:none">
+                <div class="group">
+                    <label for="name">Surname</label>
+                    <input type="text" id="name" class="form-control" autocomplete="off" placeholder="{{myData.surname}}" formControlName="surname">
+                </div>
+            </div>
+            <small class="form-error" *ngIf="formErrors.firstName || formErrors.surname">{{formErrors.firstName || formErrors.surname}}</small>
+            <!-- disables autocomplete for firefox --><input type="text" style="display:none">
+            <div class="form-group relative" id="profile-pic-group">
+                <div class="group">
+                    <img *ngIf="profilePic" [src]="profilePic" alt="Account picture">
+                    <div class="form-group align-vertically" id="profile-pic-input-cont">
+                        <label id="profile-pic-label" for="profilePic">Profile picture URL</label>
+                        <input #profilePicVal type="text" id="profilePic" class="form-control" placeholder="http//..." (input)="replaceProfilePic(profilePicVal.value)" formControlName="profilePicUrl">
+                        <small class="form-error" *ngIf="formErrors.profilePicUrl">{{formErrors.profilePicUrl}}</small>
+                    </div>
+                </div>
+            </div>
+            <!-- disables autocomplete for firefox --><input type="password" style="display:none">
+            <div class="form-group">
+                <label for="textarea">Description</label>
+                <textarea class="form-control" id="textarea" rows="3" placeholder="{{myData.description}}" formControlName="description" (keydown)="setStringLengthLimit($event, 300)"></textarea>
+                <p>Max length: <span style="color: red;">{{profileSettingsForm.value.description | maxLength:300}}</span></p>
+                <small class="form-error" *ngIf="formErrors.description">{{formErrors.description}}</small>
+            </div>
+            <div class="row">
+                <div class="form-error" *ngIf="error" id="submit-error">
+                    <small>{{errMsg}}</small>
+                </div> 
+                <div id="btn-cont">
+                    <button class="btn btn-secondary" (click)="resetForm($event)">Cancel</button>
+                    <button class="btn btn-danger">Save Changes <i class="fa fa-circle-o-notch fa-spin fa-fw" *ngIf="loading"></i></button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <h4 id="success-msg" class="my-animation" *ngIf="opComplete">Saved changes</h4>
+
+    <div class="col-sm-2" id="confirm" *ngIf="showElem">
+        <p><b>Are you sure?</b></p>
+        <div class="row justify-content-around" id="confirm-btn-cont">
+            <button class="btn" (click)="showConfirmBox(false, $event)">Cancel</button>
+            <button class="btn btn-danger" (click)="deleteAccount($event)">Confirm</button>
+        </div>
+    </div>
+</div>
+<div id="confirm-wrapper" (click)="showConfirmBox(false)" *ngIf="showElem"></div>

@@ -1,0 +1,33 @@
+<div class="row justify-content-center http-error" *ngIf="httpErr">
+    <div class="col-sm-4">
+        <h1 class="align-text" style="color: red;">{{httpErr}}</h1>
+    </div>
+</div>
+
+<login *ngIf="!loggedIn() && !httpErr"></login>
+<section *ngIf="loggedIn() && !httpErr">
+    <save-img-comp [img]="img" [boards]="boards" *ngIf="showSaveImgComp"></save-img-comp>
+    <masonry class="align-horizontally" id="all-imgs-row" [options]="myOptions" [useImagesLoaded]="true">
+        <masonry-brick class="pun-frame" *ngFor="let img of imgs; let i=index">
+            <div class="pun-wrapper pun-hover relative">
+                <div class="img-wrapper" (click)="navigateToDetails($event, img)">
+                    <button class="btn btn-danger save-btn" (click)="showSaveImgComponent(img)"><i class="fa fa-star-o" aria-hidden="true"></i> Save</button>
+                    <div class="border img-layer"></div>
+                    <img [src]="img.url" alt="zero">
+                    <div class="link align-horizontally">
+                        <small><a href="{{processUrl(img.url)}}" target="_blank">{{processUrl(img.url)}}</a></small>
+                    </div>
+                </div>
+                <div class="img-info-box">
+                    <h4>{{img.title}}</h4>
+                    <p><b>{{img.description}}</b></p>
+                </div>
+            </div>
+        </masonry-brick>
+    </masonry>
+    <div class="row justify-content-center" *ngIf="nothingFound" id="no-search-result-elem">
+        <div class="col-sm-4">
+            <p>Sorry, we couldn't find any image for this search. <a (click)="resetImgs()">Go back.</a></p>
+        </div>
+    </div>
+</section>

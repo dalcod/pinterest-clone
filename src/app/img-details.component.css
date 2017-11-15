@@ -1,0 +1,117 @@
+.relative {
+    position: relative; }
+
+.align-text {
+    text-align: center; }
+
+.align-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); }
+
+.align-vertically {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%); }
+
+.align-horizontally {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%); }
+
+.border {
+    border: 1px solid black; }
+
+.border {
+    border: 1px solid black; }
+
+#wrapper {
+    position: fixed;
+    z-index: 16000;
+    width: 100%;
+    height: 100%;
+    background: #e3e3e3; }
+i {
+    position: absolute;
+    z-index: 16020;
+    border-radius: 50%;
+    color: #a7a7a7; }
+i:hover {
+    background: #c5c5c5;
+    cursor: pointer; }
+.fa-times {
+    right: 5%;
+    top: 3%;
+    font-size: 2rem;
+    padding: 5px 10px 8px 10px; }
+.fa-chevron-left {
+    font-size: 2.3rem;
+    left: 5%;
+    padding: 5px 13px 5px 9px; }
+.fa-chevron-right {
+    font-size: 2.3rem;
+    right: 5%;
+    padding: 5px 9px 5px 13px; }
+
+#first-element {
+    z-index: 16010;
+    width: 100%;
+    padding: 30px 0; }
+
+#cont {
+    padding: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    background: white; }
+#cont #img-options {
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 15px; }
+#cont #img-options button {
+    float: right; }
+#cont #img-cont {
+    padding: 5px 15px 15px 15px;
+    text-align: center;
+    width: 90%;
+    margin: 0 auto; }
+#cont #img-cont h3 {
+    font-weight: 600; }
+#cont #img-cont img {
+    max-width: 80%;
+    border-radius: 10px;
+    margin-top: 15px; }
+#cont #img-origin-info {
+    position: relative;
+    margin: 0 auto;
+    width: 90%;
+    height: 70px; }
+#cont #img-origin-info p {
+    line-height: 65px;
+    margin-left: 15px; }
+#cont #img-origin-info p .link {
+    position: relative;
+    color: #3a3a3a; }
+#cont #img-origin-info button {
+    right: 15px; }
+#cont #img-origin-info button a {
+    color: #3a3a3a; }
+#cont hr {
+    width: 85%; }
+#cont #profile-info {
+    position: relative;
+    width: 90%;
+    margin: 0 auto; }
+#cont #profile-info img {
+    border-radius: 50%;
+    width: 40px;
+    margin-left: 15px; }
+#cont #profile-info p {
+    display: inline-block;
+    margin-left: 15px; }
+#cont #profile-info p a {
+    color: #3a3a3a
+}
+#cont #profile-info p:last-of-type {
+    display: block;
+    margin-left: 75px; }

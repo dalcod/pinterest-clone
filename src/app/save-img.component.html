@@ -1,0 +1,53 @@
+<div class="align-center form-background" (click)="hideComp()"></div>
+<div class="align-vertically row justify-content-center click-out" id="save-img-comp" (click)="hideComp($event)">
+    <div class="col-sm-4 stop" id="save-pun-modal">
+        <div class="row">
+            <div class="col-sm-6 relative" id="img-frame">
+                <div class="align-center" id="img-cont">
+                    <img [src]="img.url"*ngIf="img">
+                    <p class="align-text"><b>{{img.description}}</b></p>
+                </div>
+            </div>
+            <div *ngIf="showSaveImgOpt" class="col-sm-6" id="boards-sel-col">
+                <h3>Choose board <i class="fa fa-times" aria-hidden="true" (click)="hideComp()"></i></h3>
+                <div class="alert alert-warning" *ngIf="alertMsg"><small>{{alertMsg}}</small></div>
+                <div *ngIf="boards" id="boards-cont">
+                    <p *ngFor="let board of boards" class="board">{{board.title}} <button class="btn btn-danger save-btn" (click)="saveImg(board.title)"><i class="fa fa-star-o"></i>Save</button></p>
+                </div>
+                <div id="add-board" (click)="show('form')">
+                    <i class="fa fa-circle" aria-hidden="true"></i>
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                    <h5>Create board</h5>
+                </div>
+            </div>
+            <div *ngIf="showForm" class="col-sm-6" id="add-board-form">
+                <h3>Create Board <i class="fa fa-times" id="show-boards" aria-hidden="true" (click)="show('save-img-options')"></i></h3>
+                <form [formGroup]="boardForm">
+                    <div class="form-group">
+                        <label for="board-title">Board title</label>
+                        <input type="text" id="board-title" placeholder="Title" class="form-control" formControlName="boardTitle">
+                        <div class="errors-cont">
+                            <small class="form-error" *ngIf="formErrors.boardTitle">{{formErrors.boardTitle}}</small>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-check">
+                        <p>Secret</p>
+                        <div id="check-icons">
+                            <i *ngIf="!checked" class="fa fa-toggle-off" aria-hidden="true" (click)="toggleCheck()"></i>
+                            <i *ngIf="checked" class="fa fa-toggle-on" aria-hidden="true" (click)="toggleCheck()"></i>
+                        </div>
+                    </div>
+                </form>
+                <hr>
+                <div class="errors-cont">
+                    <small *ngIf="errMsg" class="form-error">{{errMsg}}</small>
+                </div>
+                <div id="btn-cont">
+                    <button class="align-vertically btn btn-secondary" (click)="show('save-img-options')">Cancel</button>
+                    <button class="align-vertically btn btn-danger" (click)="onSubmit(boardForm.value)">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

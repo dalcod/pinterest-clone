@@ -1,0 +1,33 @@
+<save-img-comp [img]="img" [boards]="boards" *ngIf="showSaveImgComp2"></save-img-comp>
+<div id="wrapper" (click)="goBack()"></div>
+<i class="fa fa-times" (click)="goBack()"></i>
+<i class="fa fa-chevron-left  align-vertically" aria-hidden="true" (click)="prevImage()"></i>
+<i class="fa fa-chevron-right align-vertically" aria-hidden="true" (click)="nextImage()"></i>
+<div class="row justify-content-center align-vertically click-out" id="first-element" (click)="goBack($event)">
+    <div class="col-sm-4 stop" id="cont">
+        <div class="row justify-content-end" id="img-options">
+            <div class="col-sm-12">
+                <button class="btn btn-danger" id="save-btn" (click)="showSaveImgComp()">Save</button>
+            </div>
+        </div>
+        <div id="img-cont">
+            <h3 *ngIf="img.title">{{img.title}}</h3>
+            <a [href]="img.url" target="_blank">
+                <img [src]="img.url" alt="">
+            </a>
+        </div>
+        <div id="img-origin-info">
+            <p>Saved from  
+                <a href="processUrl(img.url)" target="_blank" class="link"><span><b>{{processUrl(img.url)}}</b></span></a>
+            </p>
+            <a [href]="processUrl(img.url)" target="_blank"><button class="btn btn-secondary align-vertically">Visit</button></a>
+        </div>
+        <hr>
+        <div id="profile-info">
+            <img class="align-verticallly" [src]="img.profilePicUrl" alt="">
+            <!-- l'ultimo link non funziona ricordarsi di metterlo a posto possibilmente creando una route che rispecchi lo schema proposto nel "routerLink" -->
+            <p><a routerLink="/profile/{{img.createdBy}}"><b>{{img.displayName || img.createdBy}}</b></a> saved to <a routerLink="/profile/{{img.createdBy}}/{{img.board}}"><b>{{img.board}}</b></a></p>
+            <p *ngIf="img.description">{{img.description}}</p>
+        </div>
+    </div>
+</div>

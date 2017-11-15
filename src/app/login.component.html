@@ -1,0 +1,65 @@
+<section>
+    <div class="row justify-content-center" id="form-cont">
+        <div class="col-sm-4">
+            <div class="row justify-content-center">
+                <div id="form-cont2" class="col-sm-7">
+                    <div id="img-cont">
+                        <img src="pun-it-logo.png" class="d-inline-block align-top">
+                    </div>
+                    <h2>Welcome on Pun It</h2>
+                    <form [formGroup]="loginForm" (submit)="onSubmit(loginForm.value)">
+                        <div class="row justify-content-center">
+                            <div class="form-group col-sm-9">
+                                <input type="text" class="form-control" placeholder="Username" autocomplete="off" formControlName="username">
+                                <small class="form-error" *ngIf="formErrors.username">{{formErrors.username}}</small>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="form-group col-sm-9">
+                                <input type="password" class="form-control" placeholder="Password" autocomplete="off" formControlName="password">
+                                <small class="form-error" *ngIf="formErrors.password">{{formErrors.password}}</small>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="btn-cont form-group col-sm-9">
+                                <button id="submit-btn" class="btn btn-danger">Signin</button>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center errMsg">
+                            <div class="col-sm-9">
+                                <small class="form-error" *ngIf="errMsg">{{errMsg}}</small>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="or" class="align">
+                        <span class="line"></span><span>or</span><span class="line"></span>
+                    </div>
+                    <div class="row justify-content-center btn-wrapper">
+                        <div class="btn-cont col-sm-9">
+                            <i class="fa fa-twitter"></i>
+                            <a href="/auth/twitter" id="twitter-btn" class="btn btn-info"> Signin with Twitter</a>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center btn-wrapper">
+                        <div class="btn-cont col-sm-9">
+                            <i class="fa fa-google"></i>
+                            <a href="/auth/google" id="google-btn" class="btn btn-primary">Signin with Google</a>
+                        </div>
+                    </div>
+                    <div id="signup">
+                        <small>If you don't have an account <a routerLink="/signup">signup here</a>.</small>
+                    </div>
+                    <div class="updates" id="account-updated" *ngIf="accountUpdate() === 'updated'">
+                        <p>Your account has been updated</p>
+                    </div>
+                     <div class="updates" id="account-deletion" *ngIf="accountUpdate() === 'deleted'">
+                        <p>Your account has been deleted</p>
+                    </div>
+                    <div class="row justify-content-center btn-wrapper">
+                        <div id="space"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

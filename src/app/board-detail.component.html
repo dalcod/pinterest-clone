@@ -1,0 +1,196 @@
+<div class="row justify-content-center http-error" *ngIf="httpErr">
+    <div class="col-sm-4">
+        <h1 class="align-text" style="color: red;">{{httpErr}}</h1>
+    </div>
+</div>
+
+<!-- Update Form -->
+
+<update-board-form [currentBoard]="board"
+                   *ngIf="showUpdateForm" ></update-board-form>
+
+<!-- sezione form gestione immagini -->
+
+<manage-imgs-form [op]="op"
+                  [currentBoard]="board"
+                  [selectedImgs]="checkedImgs"
+                  (opCompleted)="onOpCompleted($event)"
+                  *ngIf="showMngImgForm"></manage-imgs-form>
+
+<!-- sezione componente "save-img" -->
+
+<save-img-comp [img]="myImg"
+               [boards]="myBoards"
+               *ngIf="showSaveImgComp"></save-img-comp>
+
+<!-- Add image details form -->
+
+<div class="align-center" id="add-img-detail-wrapper" (click)="show('add-img-details', false)" *ngIf="showAddImgDetail"></div>
+<div class="row justify-content-center align-center click-out" id="add-img-detail" (click)="show('add-img-details', false, $event)" *ngIf="showAddImgDetail">
+    <div class="col-sm-3 stop">
+        <h2>Add Image Details <i class="fa fa-times" (click)="show('add-img-details', false)"></i></h2>
+        <hr>
+        <form [formGroup]="addImgDetailsForm" (submit)="addImgDetails(addImgDetailsForm.value)">
+            <div class="from-group row">
+                <div class="col-3 realtive">
+                    <label class="align-vertically" for="image-title">Title: </label>
+                </div>
+                <div class="col-9">
+                    <input type="text" id="image-title" class="form-control" [value]="img.title" formControlName="title">
+                </div>
+                <small class="form-error" *ngIf="formErrors.title">{{formErrors.title}}</small>
+            </div>
+            <div class="form-group row justify-content-between">
+                <div class="col-3 relative">
+                    <label class="align-vertically" for="image-description">Description: </label>
+                </div>
+                <div class="col-9">
+                    <textarea id="image-description" rows="2" formControlName="description" [value]="img.description"></textarea>
+                </div>
+            </div>
+            <div class="row justify-content">
+                <div class="col-6"></div>
+                <div class="col-6">
+                    <button class="btn btn-danger">Continue</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- sezione alert box 'nessuna selezione' -->
+
+<div class="align-center form-background" *ngIf="showAlert" (click)="show('alert-box', false)"></div>
+<div class="row justify-content-center align-center" id="alert-row" *ngIf="showAlert">
+    <div class="col-sm-3 align-center" id="alert-box">
+        <h2 class="align-text relative">Ooops! <i class="fa fa-times" aria-hidden="true" (click)="show('alert-box', false)"></i></h2>
+        <hr>
+        <p class="align-text">Please select an image to change.</p>
+        <hr>
+        <button class="btn btn-danger" (click)="show('alert-box', false)">Ok</button>
+    </div>
+</div>
+
+<!-- aspetta che "this.isMyProfile" sia stato determinato prima di mostrare la pagina altrimenti il comportamento dell'applicazione non sarebbe visivamente bello... -->
+
+<section (click)="show('add-image-form', false, $event)" *ngIf="this.isMyProfile !== undefined && !httpErr">
+
+    <!-- sezione barra modifica immagini -->
+
+    <div class="row fixed-top justify-content-center" id="modify-imgs-bar" *ngIf="isMyProfile">
+        <div class="col-sm-12 realtive" [ngClass]="setMenuClasses" id="modify-img-menu">
+            <div class="align-center">
+                <button class="btn btn-secondary" (click)="show('mng-img-form', true, '', 'move')">Move</button>
+                <button class="btn btn-secondary" (click)="show('mng-img-form', true, '', 'copy')">Copy</button>
+                <button class="btn btn-secondary" (click)="deleteImages()">Delete</button>
+                <button class="btn btn-secondary" (click)="resetOptions()">Cancel</button>
+            </div>
+        </div>
+        <div class="col-sm-12" [ngClass]="setNavClasses" id="modify-img-nav">
+            <div class="row justify-content-center">
+                <div class="col-sm-1 align-text relative">
+                    <a class="bar-link" (click)="show('update-form', true)">
+                        <i class="fa fa-pencil-square-o align-center"></i>
+                        <span class="bar-tooltip">Edit Board</span>
+                    </a>
+                </div>
+                <div class="col-sm-1 align-text relative">
+                    <a class="bar-link" (click)="show('img-options', true)">
+                        <i class="fa fa-arrows-v align-center"></i>
+                        <span class="bar-tooltip">Edit Images</span>
+                    </a>
+                </div>
+                <div class="col-sm-1 align-text relative">
+                    <a class="bar-link">
+                        <i class="fa fa-ellipsis-v align-center"></i>
+                        <span class="bar-tooltip">Share</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- sezione informazioni board -->
+
+    <div class="row justify-content-center" [ngClass]="boardInfoClasses" id="board-info">
+        <div class="col-sm-4">
+            <h1><b>{{board.title}}</b></h1>
+            <p>Puns: {{imgsArr.length}}</p>
+            <p>{{board.description}}</p>
+        </div>
+    </div>
+
+    <!-- sezione notifica errore caricamento immagine -->
+
+    <div class="row justify-content-center" id="img-load-error" *ngIf="imgLoadError">
+        <div class="col-sm-4">
+            <h5 class="form-error align-text">Sorry we are unable to load this image</h5>
+        </div>
+    </div>
+
+    <!-- sezione visualizzazione immagini -->
+
+    <div class="row justify-content-center" [ngClass]="boardImgClasses" id="board-img-row">
+        <div class="col-sm-11">
+            <div class="row">
+                <!-- finestra add image -->
+                <masonry class="align-horizontally" id="masonry-row" [options]="myOptions" [useImagesLoaded]="true">
+                    <masonry-brick class="pun-frame stop" *ngIf="isMyProfile" id="add-pun">
+                        <div class="relative pun-hover" id="add-pun-wrapper">
+                            <div class="add-pun-window relative" (click)="show('add-image-form', true)">
+                                <i class="fa fa-circle align-center" aria-hidden="true"></i>
+                                <i class="fa fa-plus-circle align-center" aria-hidden="true"></i>
+                            </div>
+                            <h3 *ngIf="!showAddImageForm">Add image</h3>
+                            <form class="add-board-form" [formGroup]="addImageForm" (submit)="addImage(addImageForm.value)" *ngIf="showAddImageForm">
+                                <div class="form-group">
+                                    <input type="text" id="add-title" class="form-control" placeholder="http//..." formControlName="imgUrl">
+                                    <small class="form-error" *ngIf="formErrors.imgUrl">{{formErrors.imgUrl}}</small>
+                                </div>
+                                <button class="btn btn-danger">Add</button>
+                                <small style="padding-left: 5px; display: block" class="form-error" *ngIf="errMsg">{{errMsg}}</small>
+                            </form>
+                        </div>
+                    </masonry-brick>
+                    <masonry-brick class="pun-frame" *ngFor="let img of imgsArr; let i=index">
+                        <div class="pun-wrapper pun-hover relative" *ngIf="!img.broken">
+                            <i class="fa fa-square-o" *ngIf="showImgOptions" (click)="checkImg(img)"></i>
+                            <i class="fa fa-square" *ngIf="showImgOptions"></i>
+                            <i class="fa fa-square" id="fa-square-2" *ngIf="showImgOptions && !alreadyChecked(img)"></i>
+                            <i class="fa fa-check-square-o" *ngIf="showImgOptions && !alreadyChecked(img)" (click)="checkImg(img)"></i>
+                            <button class="btn btn-danger save-btn" (click)="showSaveImgComponent(img)" *ngIf="!isMyProfile"><i class="fa fa-star-o" aria-hidden="true"></i> Save</button>
+                            <img alt="zero" 
+                                 [src]="img.url"
+                                 (click)="navigateToDetails(img)"
+                                 (error)="onImageError(img)">
+                            <div class="img-info-box">
+                                <div class="link align-horizontally">
+                                    <small *ngIf="img"><a href="{{processUrl(img.url)}}" target="_blank">Link to the website</a></small>
+                                </div>
+                                <h4>{{img.title}}</h4>
+                                <p><b>{{img.description}}</b></p>
+                                <div class="account-info relative">
+                                    <a routerLink="/profile/{{img.createdBy}}">
+                                        <img [src]="img.profilePicUrl" alt="">
+                                        <p><b>{{img.createdBy}}</b></p>
+                                        <p>{{img.board}}</p>
+                                    </a>
+                                    <i class="fa fa-pencil" (click)="showImgDetailsForm(img)" *ngIf="isMyProfile"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pun-wrapper pun-hover relative" *ngIf="img.broken && isMyProfile">
+                            <i class="fa fa-square-o" *ngIf="showImgOptions" (click)="checkImg(img)"></i>
+                            <i class="fa fa-square" *ngIf="showImgOptions"></i>
+                            <i class="fa fa-square" id="fa-square-2" *ngIf="showImgOptions && !alreadyChecked(img)"></i>
+                            <i class="fa fa-check-square-o" *ngIf="showImgOptions && !alreadyChecked(img)" (click)="checkImg(img)"></i>
+                            <img alt="zero" 
+                                 src="broken-img.png">
+                        </div>
+                    </masonry-brick>
+                </masonry>
+            </div>
+        </div>
+    </div>
+    <!-- Immagini -->
+</section>
