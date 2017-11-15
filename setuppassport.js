@@ -44,7 +44,7 @@ passport.use('local-login', new LocalStrategy(function(username, password, done)
 var twitterAuth = {
     consumerKey: keys.twitter.consumerKey,
     consumerSecret: keys.twitter.consumerSecret,
-    callbackUrl: 'http://127.0.0.1:3000/auth/twitter/callback'
+    callbackUrl: 'https://pinterest-clone3.herokuapp.com/auth/twitter/callback'
 }
 
 passport.use(new TwitterStrategy(twitterAuth, function(token, tokenSecret, profile, done){
@@ -73,7 +73,7 @@ passport.use(new TwitterStrategy(twitterAuth, function(token, tokenSecret, profi
 var googleAuth = {
     clientID: keys.google.clientID,
     clientSecret: keys.google.clientSecret,
-    callbackURL: 'http://127.0.0.1:3000/auth/google/callback'
+    callbackURL: 'https://pinterest-clone3.herokuapp.com/auth/google/callback'
 }
 
 passport.use(new GoogleStrategy(googleAuth, function(token, refreshToken, profile, done){
